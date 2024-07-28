@@ -1,0 +1,78 @@
+import java.util.ArrayList;
+import java.util.List;
+
+// Observer interface
+interface Observer {
+    void update(String stock, double price);
+}
+
+// Concrete Observer
+class Client implements Observer {
+    private String name;
+
+    public Client(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void update(String stock, double price) {
+        System.out.println(name + " received update: " + stock + " is now $" + price);
+    }
+}
+
+// Subject interface
+interface Subject {
+    void registerObserver(Observer o);
+    void removeObserver(Observer o);
+    void notifyObservers();
+}
+
+// Concrete Subject
+class StockMarket implements Subject {
+    private List<Observer> observers;
+    private String stock;
+    private double price;
+
+    public StockMarket() {
+        observers = new ArrayList<>();
+    }
+
+    public void setStockPrice(String stock, double price) {
+        this.stock = stock;
+        this.price = price;
+        notifyObservers();
+    }
+
+    @Override
+    public void registerObserver(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer o : observers) {
+            o.update(stock, price);
+        }
+    }
+}
+
+// Demo
+public class ObserverPatternDemo {
+    public static void main(String[] args) {
+        StockMarket stockMarket = new StockMarket();
+
+        Client client1 = new Client("Client 1");
+        Client client2 = new Client("Client 2");
+
+        stockMarket.registerObserver(client1);
+        stockMarket.registerObserver(client2);
+
+        stockMarket.setStockPrice("AAPL", 150.00);
+        stockMarket.setStockPrice("GOOGL", 2800.00);
+    }
+}
