@@ -1,32 +1,59 @@
-// Singleton Logger
-class Logger {
-    private static Logger instance;
+// Product interface
+interface Shape {
+    void draw();
+}
 
-    private Logger() {
-        // private constructor
+// Concrete Products
+class Circle implements Shape {
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Circle");
     }
+}
 
-    public static synchronized Logger getInstance() {
-        if (instance == null) {
-            instance = new Logger();
+class Square implements Shape {
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Square");
+    }
+}
+
+class Rectangle implements Shape {
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Rectangle");
+    }
+}
+
+// Factory
+class ShapeFactory {
+    public Shape createShape(String shapeType) {
+        if (shapeType == null) {
+            return null;
         }
-        return instance;
-    }
-
-    public void log(String message) {
-        System.out.println("Log: " + message);
+        if (shapeType.equalsIgnoreCase("CIRCLE")) {
+            return new Circle();
+        } else if (shapeType.equalsIgnoreCase("SQUARE")) {
+            return new Square();
+        } else if (shapeType.equalsIgnoreCase("RECTANGLE")) {
+            return new Rectangle();
+        }
+        return null;
     }
 }
 
 // Demo
-public class SingletonPatternDemo {
+public class FactoryPatternDemo {
     public static void main(String[] args) {
-        Logger logger1 = Logger.getInstance();
-        Logger logger2 = Logger.getInstance();
+        ShapeFactory shapeFactory = new ShapeFactory();
 
-        logger1.log("This is a log message.");
-        logger2.log("This is another log message.");
+        Shape shape1 = shapeFactory.createShape("CIRCLE");
+        shape1.draw();
 
-        System.out.println("Logger instances are the same: " + (logger1 == logger2));
+        Shape shape2 = shapeFactory.createShape("SQUARE");
+        shape2.draw();
+
+        Shape shape3 = shapeFactory.createShape("RECTANGLE");
+        shape3.draw();
     }
 }
